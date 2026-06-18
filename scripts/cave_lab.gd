@@ -1,6 +1,8 @@
 # CaveLab.gd — 洞穴实验室主脚本
 extends Node2D
 
+const AssetMap = preload("res://resources/asset_map.gd")
+
 # ── UI 引用 ──
 @onready var synth_graph: Control = $UI/SynthesisGraph
 @onready var material_panel: Control = $UI/MaterialPanel
@@ -76,18 +78,18 @@ func _build_synthesis_graph() -> void:
 
 		if discovered:
 			if is_intermediate:
-				icon.texture = load("res://assets/ui_node_intermediate.png")
+				icon.texture = load("res://assets/external/runestone_water.png")
 			else:
-				icon.texture = load("res://assets/ui_node_known_explosive.png")
+				icon.texture = load("res://assets/external/runestone_fire.png")
 		else:
 			var missing: Array[String] = []
 			for op in rec["required_operations"]:
 				if op not in owned_ops:
 					missing.append(op)
 			if missing.is_empty():
-				icon.texture = load("res://assets/ui_node_locked.png")
+				icon.texture = load("res://assets/external/runestone_blank_1.png")
 			else:
-				icon.texture = load("res://assets/ui_node_locked.png")
+				icon.texture = load("res://assets/external/runestone_blank_1.png")
 				icon.tooltip_text = rec.get("lock_text", "需要: %s" % ", ".join(missing))
 		row.add_child(icon)
 
@@ -141,11 +143,11 @@ func _build_material_panel() -> void:
 		row.custom_minimum_size = Vector2(0, 28)
 
 		# 精灵图标
-		var tex_path = "res://assets/mat_%s.png" % mat_id
+		var tex_path = "res://assets/external/crystal_blue.png" % mat_id
 		if ResourceLoader.exists(tex_path):
 			var icon = TextureRect.new()
 			icon.texture = load(tex_path)
-			icon.custom_minimum_size = Vector2(16, 16)
+			icon.custom_minimum_size = Vector2(32, 32)
 			icon.expand_mode = TextureRect.EXPAND_KEEP_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 			row.add_child(icon)
@@ -168,11 +170,11 @@ func _build_material_panel() -> void:
 		if rec.is_empty():
 			continue
 		var row = HBoxContainer.new()
-		var tex_path = "res://assets/inter_%s.png" % inter_id
+		var tex_path = "res://assets/external/stoppered_bottle_empty.png" % inter_id
 		if ResourceLoader.exists(tex_path):
 			var icon = TextureRect.new()
 			icon.texture = load(tex_path)
-			icon.custom_minimum_size = Vector2(16, 16)
+			icon.custom_minimum_size = Vector2(32, 32)
 			icon.expand_mode = TextureRect.EXPAND_KEEP_SIZE
 			row.add_child(icon)
 

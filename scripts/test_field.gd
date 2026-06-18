@@ -61,8 +61,8 @@ func _build_target() -> void:
 	for child in building_root.get_children():
 		child.queue_free()
 
-	var tex_soil = load("res://assets/brick_soil_64x32.png")
-	var tex_stone = load("res://assets/brick_stone_64x32.png")
+	var tex_soil = load("res://assets/external/tile_cave_bg_rock.png")
+	var tex_stone = load("res://assets/external/tile_cave_bg_crystal.png")
 	var start_x = 700.0
 	var start_y = 500.0
 	var block_ids: Array[RigidBody2D] = []
@@ -198,9 +198,9 @@ func _apply_particles(recipe: Dictionary, pos: Vector2) -> void:
 	var pm = particles.process_material
 	if pm is ParticleProcessMaterial:
 		if fire:
-			particles.texture = load("res://assets/particle_fire.png")
+			particles.texture = load("res://assets/external/potion_full_1.png")
 		else:
-			particles.texture = load("res://assets/particle_smoke.png")
+			particles.texture = load("res://assets/external/bg_cave.png")
 
 	particles.emitting = true
 
