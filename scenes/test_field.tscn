@@ -1,0 +1,125 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/test_field.gd" id="1_tf"]
+
+[sub_resource type="RectangleShape2D" id="rect32"]
+size = Vector2(64, 32)
+
+[node name="TestField" type="Node2D"]
+script = ExtResource("1_tf")
+
+# ── 试验场背景 (洞穴 tilemap 占位) ──
+[node name="Background" type="ColorRect" parent="."]
+color = Color(0.05, 0.02, 0.01, 1.0)
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+# ── 地面 ──
+[node name="Ground" type="ColorRect" parent="."]
+color = Color(0.24, 0.15, 0.14, 1.0)
+layout_mode = 0
+offset_top = 600.0
+offset_right = 1920.0
+offset_bottom = 640.0
+
+# ── 目标建筑容器 ──
+[node name="Building" type="Node2D" parent="."]
+
+# ── 碎片对象池 ──
+[node name="FragmentPool" type="Node2D" parent="."]
+
+# ── GPUParticles2D ──
+[node name="Particles" type="GPUParticles2D" parent="."]
+position = Vector2(960, 300)
+amount = 0
+one_shot = true
+explosiveness = 1.0
+emitting = false
+
+# ── Camera2D ──
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(960, 400)
+current = true
+
+# ── CanvasModulate ──
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+
+# ── UI 覆盖层 ──
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 860.0
+offset_top = 16.0
+offset_right = 1060.0
+offset_bottom = 40.0
+text = "建筑完好"
+
+[node name="ResetBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 112.0
+offset_bottom = 48.0
+text = "🔄 重置"
+
+[node name="ReplayBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 16.0
+offset_right = 216.0
+offset_bottom = 48.0
+text = "⏪ 慢放"
+
+[node name="GifBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 16.0
+offset_right = 340.0
+offset_bottom = 48.0
+text = "📷 导出GIF"
+
+[node name="BackBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 920.0
+offset_top = 16.0
+offset_right = 960.0
+offset_bottom = 48.0
+text = "←"
+
+[node name="Hint" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 60.0
+offset_right = 500.0
+offset_bottom = 84.0
+text = "从实验室带炸药过来。放置后点击引燃。"
+
+# ── 命名对话框 ──
+[node name="NamingDialog" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -80.0
+offset_right = 160.0
+offset_bottom = 80.0
+visible = false
+
+[node name="NameInput" type="LineEdit" parent="UI/NamingDialog"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 28)
+placeholder_text = "给你的炸药起个名字……"
+max_length = 20
+
+[node name="ConfirmBtn" type="Button" parent="UI/NamingDialog"]
+layout_mode = 2
+text = "✓ 确认命名"

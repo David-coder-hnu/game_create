@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/chapter_select.gd" id="1_ch"]
+
+[node name="ChapterSelect" type="Node2D"]
+script = ExtResource("1_ch")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="BackBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 80.0
+offset_bottom = 52.0
+text = "← 返回"
+
+[node name="Ch1Card" type="PanelContainer" parent="UI"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 200.0
+offset_right = 620.0
+offset_bottom = 450.0
+
+[node name="Ch1Label" type="Label" parent="UI/Ch1Card"]
+layout_mode = 2
+text = "第一章 泥土之下\n\n帮助开凿蚁穴隧道\n炸碎硬岩, 小心支撑柱"
+
+[node name="Ch2Card" type="PanelContainer" parent="UI"]
+layout_mode = 0
+offset_left = 660.0
+offset_top = 200.0
+offset_right = 1080.0
+offset_bottom = 450.0
+
+[node name="Ch2Label" type="Label" parent="UI/Ch2Card"]
+layout_mode = 2
+text = "第二章 蚁后的命令\n\n清除地表障碍\n瓶盖/火柴盒/草茎"
+
+[node name="Ch3Card" type="PanelContainer" parent="UI"]
+layout_mode = 0
+offset_left = 1120.0
+offset_top = 200.0
+offset_right = 1540.0
+offset_bottom = 450.0
+
+[node name="Ch3Label" type="Label" parent="UI/Ch3Card"]
+layout_mode = 2
+text = "第三章 红火蚁入侵\n\n精确打击敌巢\n蚁酸罐/幼虫库/哨兵"

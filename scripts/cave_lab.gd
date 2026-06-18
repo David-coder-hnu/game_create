@@ -33,14 +33,8 @@ func _ready() -> void:
 	test_field_btn.pressed.connect(_on_test_field)
 	hub_btn.pressed.connect(_on_back_to_hub)
 
-	# 初始状态
-	_build_material_panel()
-	_refresh_synthesis_graph()
-	_show_hint("黑火药配方已知。试试调整研磨度和温度，合成火药……")
-
-	# 首次游玩：环境引导
-	if not RecipeDB.is_discovered("brown_powder"):
-		_show_hint("试试把黑火药磨得更细，温度提高一点？")
+	# 延迟到下一帧初始化——避免在场景树构建期间操作子节点
+	call_deferred("_late_init")
 
 
 func _process(delta: float) -> void:
@@ -50,7 +44,8 @@ func _process(delta: float) -> void:
 
 # ── 原料面板 ──
 func _build_material_panel() -> void:
-	material_panel.clear()
+	for child in material_panel.get_children():
+		child.queue_free()
 	var all_mats = InventoryManager.get_available_materials()
 	for mat_id in all_mats:
 		var mat = all_mats[mat_id]
@@ -172,7 +167,8 @@ func _on_recipe_discovered(recipe_id: String, recipe_type: String) -> void:
 
 # ── 合成图 ──
 func _refresh_synthesis_graph() -> void:
-	synth_graph.clear()
+	for child in synth_graph.get_children():
+		child.queue_free()
 	var all_recipes = RecipeDB.recipes
 	var owned_ops = EquipmentStore.get_owned_operations()
 
@@ -215,6 +211,13 @@ func _on_test_field() -> void:
 
 func _on_back_to_hub() -> void:
 	get_tree().change_scene_to_file("res://scenes/ant_nest_hub.tscn")
+
+func _late_init() -> void:
+	_build_material_panel()
+	_refresh_synthesis_graph()
+	_show_hint("黑火药配方已知。试试调整研磨度和温度，合成火药……")
+	if not RecipeDB.is_discovered("brown_powder"):
+		_show_hint("试试把黑火药磨得更细，温度提高一点？")
 
 func _show_hint(text: String) -> void:
 	hint_label.text = text

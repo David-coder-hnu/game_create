@@ -25,9 +25,12 @@ var building_intact: bool = true
 
 func _ready() -> void:
 	RenderingServer.canvas_item_set_snap(position, true)
+	_connect_ui()
+	call_deferred("_late_init")
+
+func _late_init() -> void:
 	_init_fragment_pool()
 	_build_target()
-	_connect_ui()
 
 func _init_fragment_pool() -> void:
 	for i in FRAGMENT_POOL_SIZE:

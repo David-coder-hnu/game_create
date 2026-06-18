@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/equipment_store.gd" id="1_eq"]
+
+[node name="EquipmentStoreUI" type="Node2D"]
+script = ExtResource("1_eq")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="BackBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 80.0
+offset_bottom = 52.0
+text = "← 返回"
+
+[node name="DeviceList" type="ScrollContainer" parent="UI"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 100.0
+offset_right = 1720.0
+offset_bottom = 1000.0
+
+[node name="StatusLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 60.0
+offset_right = 800.0
+offset_bottom = 84.0
+text = "设备商店 — 砂粒: --"

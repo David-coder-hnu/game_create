@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ant_nest_hub.gd" id="1_hub"]
+
+[node name="AntNestHub" type="Node2D"]
+script = ExtResource("1_hub")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CaveLabBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 700.0
+offset_top = 300.0
+offset_right = 940.0
+offset_bottom = 340.0
+text = "洞穴实验室"
+
+[node name="TestFieldBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 700.0
+offset_top = 360.0
+offset_right = 940.0
+offset_bottom = 400.0
+text = "试验场"
+
+[node name="ChapterSelectBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 700.0
+offset_top = 420.0
+offset_right = 940.0
+offset_bottom = 460.0
+text = "关卡选择"
+
+[node name="EquipmentStoreBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 700.0
+offset_top = 480.0
+offset_right = 940.0
+offset_bottom = 520.0
+text = "设备商店"

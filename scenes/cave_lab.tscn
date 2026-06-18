@@ -1,0 +1,95 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/cave_lab.gd" id="1_lab"]
+
+[sub_resource type="StyleBoxFlat" id="sb_panel"]
+bg_color = Color(0.1, 0.07, 0.04, 0.85)
+
+[node name="CaveLab" type="Node2D"]
+script = ExtResource("1_lab")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+# ── 左侧合成图面板 ──
+[node name="SynthesisGraph" type="PanelContainer" parent="UI"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 80.0
+offset_right = 340.0
+offset_bottom = 600.0
+theme_override_styles/panel = SubResource("sb_panel")
+
+[node name="GraphContent" type="VBoxContainer" parent="UI/SynthesisGraph"]
+
+# ── 底部提示 ──
+[node name="HintLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 620.0
+offset_right = 500.0
+offset_bottom = 650.0
+text = "黑火药配方已知。试试调整研磨度和温度……"
+
+# ── 右上角 Hub 返回按钮 ──
+[node name="HubBtn" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = 920.0
+offset_top = 20.0
+offset_right = 960.0
+offset_bottom = 52.0
+text = "←"
+
+# ── 工作台 ──
+[node name="Workbench" type="PanelContainer" parent="UI"]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 80.0
+offset_right = 900.0
+offset_bottom = 550.0
+theme_override_styles/panel = SubResource("sb_panel")
+
+[node name="WorkbenchContent" type="VBoxContainer" parent="UI/Workbench"]
+
+[node name="GrindSlider" type="HSlider" parent="UI/Workbench/WorkbenchContent"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 30)
+min_value = 1.0
+max_value = 5.0
+step = 1.0
+value = 1.0
+
+[node name="GrindLabel" type="Label" parent="UI/Workbench/WorkbenchContent"]
+layout_mode = 2
+text = "研磨: Lv1 [粗粒 ■□□□□ 极细]"
+
+[node name="TempSlider" type="HSlider" parent="UI/Workbench/WorkbenchContent"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 30)
+min_value = 0.0
+max_value = 100.0
+step = 5.0
+value = 0.0
+
+[node name="TempLabel" type="Label" parent="UI/Workbench/WorkbenchContent"]
+layout_mode = 2
+text = "温度: 0°C"
+
+[node name="SynthesizeBtn" type="Button" parent="UI/Workbench/WorkbenchContent"]
+layout_mode = 2
+text = "🔬 尝试合成"
+
+[node name="TestFieldBtn" type="Button" parent="UI/Workbench/WorkbenchContent"]
+layout_mode = 2
+text = "💥 去试验场"
+
+# ── 原料面板 (可滚动) ──
+[node name="MaterialPanel" type="ScrollContainer" parent="UI"]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 570.0
+offset_right = 900.0
+offset_bottom = 1040.0
