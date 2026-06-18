@@ -1,0 +1,32 @@
+; Engine configuration file for AntChem.
+; See https://docs.godotengine.org/en/stable/classes/class_projectsettings.html
+
+config_version=5
+
+[application]
+config/name="蚂蚁化工 AntChem"
+config/description="Army ant explosive engineer — chemistry synthesis + physics demolition."
+config/version="0.1.0-prototype"
+run/main_scene="res://scenes/main.tscn"
+config/icon="res://assets/icon.svg"
+
+[autoload]
+RecipeDB="*res://autoload/recipe_db.gd"
+EquipmentStore="*res://autoload/equipment_store.gd"
+InventoryManager="*res://autoload/inventory_manager.gd"
+
+[display]
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/resizable=true
+window/stretch/mode="canvas_items"
+
+[rendering]
+quality/2d/use_pixel_snap=true
+textures/canvas_textures/default_texture_filter=0
+
+[input_devices]
+pointing/emulate_touch_from_mouse=true
+
+[physics]
+common/physics_ticks_per_second=60

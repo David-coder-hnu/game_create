@@ -1,0 +1,8 @@
+# Godot
+.godot/
+*.tmp
+*.import
+export/
+
+# User data
+user://
