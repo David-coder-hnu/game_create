@@ -5,7 +5,6 @@ extends Node2D
 @onready var status_label: Label = $UI/StatusLabel
 
 func _ready():
-	RenderingServer.canvas_item_set_snap(position, true)
 	var back_btn = $UI/BackBtn as Button
 	back_btn.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/ant_nest_hub.tscn"))
 	call_deferred("_build_device_list")
