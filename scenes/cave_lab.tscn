@@ -1,50 +1,48 @@
-[gd_scene load_steps=6 format=3 uid="uid://fxry66kqpopj"]
+[gd_scene load_steps=7 format=3 uid="uid://850l4krlj4l2"]
 
 [ext_resource type="Script" uid="uid://ck3oy766b84ti" path="res://scripts/cave_lab.gd" id="1_lab"]
-[ext_resource type="Texture2D" uid="uid://dv52gattsnxf1" path="res://assets/crucible_bubble_0.png" id="crucible_tex"]
-[ext_resource type="Texture2D" uid="uid://nff7cg0bgsd" path="res://assets/firefly_glow.png" id="firefly_glow"]
-[ext_resource type="Texture2D" uid="uid://skxs4c168o4d" path="res://assets/lab_workbench.png" id="workbench_tex"]
+[ext_resource type="Texture2D" uid="uid://c6l44yqytanfd" path="res://assets/cave_bg.png" id="2_cave_bg"]
+[ext_resource type="Texture2D" uid="uid://nff7cg0bgsd" path="res://assets/firefly_glow.png" id="3_firefly"]
+[ext_resource type="Texture2D" uid="uid://skxs4c168o4d" path="res://assets/lab_workbench.png" id="4_bench"]
+[ext_resource type="Texture2D" uid="uid://dv52gattsnxf1" path="res://assets/crucible_bubble_0.png" id="5_crucible"]
 
 [sub_resource type="StyleBoxFlat" id="panel_dark"]
-bg_color = Color(0.1, 0.07, 0.05, 0.85)
+bg_color = Color(0.08, 0.05, 0.04, 0.88)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.77, 0.65, 0.27, 0.6)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+border_color = Color(0.7, 0.55, 0.3, 0.7)
 
 [node name="CaveLab" type="Node2D"]
 script = ExtResource("1_lab")
 
-[node name="CaveWalls" type="Node2D" parent="."]
+[node name="CaveBG" type="Sprite2D" parent="."]
+position = Vector2(960, 540)
+texture = ExtResource("2_cave_bg")
 
 [node name="Vignette" type="ColorRect" parent="."]
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0)
-
-[node name="Workbench" type="Sprite2D" parent="."]
-position = Vector2(960, 520)
-scale = Vector2(6, 3)
-texture = ExtResource("workbench_tex")
-
-[node name="Crucible" type="Sprite2D" parent="."]
-position = Vector2(960, 490)
-scale = Vector2(2, 2)
-texture = ExtResource("crucible_tex")
-
-[node name="WorkbenchMaterials" type="Node2D" parent="."]
 
 [node name="Firefly" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 0.85, 0.85)
+modulate = Color(1, 1, 0.82, 0.8)
 position = Vector2(1780, 60)
-scale = Vector2(3, 3)
-texture = ExtResource("firefly_glow")
+scale = Vector2(3.5, 3.5)
+texture = ExtResource("3_firefly")
+
+[node name="Workbench" type="Sprite2D" parent="."]
+position = Vector2(1050, 600)
+scale = Vector2(8, 3)
+texture = ExtResource("4_bench")
+
+[node name="Crucible" type="Sprite2D" parent="."]
+position = Vector2(1050, 565)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("5_crucible")
+
+[node name="WorkbenchMaterials" type="Node2D" parent="."]
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -56,13 +54,13 @@ grow_vertical = 2
 
 [node name="SynthesisPanel" type="PanelContainer" parent="UI"]
 layout_mode = 0
-offset_left = 12.0
-offset_top = 40.0
-offset_right = 280.0
-offset_bottom = 800.0
+offset_left = 10.0
+offset_top = 30.0
+offset_right = 260.0
+offset_bottom = 750.0
 theme_override_styles/panel = SubResource("panel_dark")
 
-[node name="SynthesisTitle" type="Label" parent="UI/SynthesisPanel"]
+[node name="SynthTitle" type="Label" parent="UI/SynthesisPanel"]
 layout_mode = 2
 text = "合成图"
 
@@ -71,81 +69,71 @@ layout_mode = 2
 
 [node name="HintLabel" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = 12.0
-offset_top = 820.0
+offset_left = 10.0
+offset_top = 780.0
 offset_right = 600.0
-offset_bottom = 860.0
-text = "选好原料，调到合适的研磨度和温度，然后尝试合成……"
+offset_bottom = 820.0
 
-[node name="MaterialPanel" type="ScrollContainer" parent="UI"]
+[node name="HubBtn" type="Button" parent="UI"]
 layout_mode = 0
-offset_left = 300.0
-offset_top = 40.0
-offset_right = 650.0
-offset_bottom = 520.0
+offset_left = 1856.0
+offset_top = 8.0
+offset_right = 1912.0
+offset_bottom = 44.0
+text = "<-"
 
-[node name="GrindLabel" type="Label" parent="UI"]
+[node name="ControlPanel" type="PanelContainer" parent="UI"]
 layout_mode = 0
-offset_left = 300.0
-offset_top = 540.0
-offset_right = 480.0
-offset_bottom = 565.0
-text = "研磨: Lv1 [粗粒 ■□□□□ 极细]"
-
-[node name="GrindSlider" type="HSlider" parent="UI"]
-layout_mode = 0
-offset_left = 300.0
-offset_top = 568.0
+offset_left = 280.0
+offset_top = 30.0
 offset_right = 640.0
-offset_bottom = 598.0
+offset_bottom = 820.0
+theme_override_styles/panel = SubResource("panel_dark")
+
+[node name="ControlContent" type="VBoxContainer" parent="UI/ControlPanel"]
+layout_mode = 2
+
+[node name="SectionLabel" type="Label" parent="UI/ControlPanel/ControlContent"]
+layout_mode = 2
+text = "原料库存"
+
+[node name="MaterialScroll" type="ScrollContainer" parent="UI/ControlPanel/ControlContent"]
+custom_minimum_size = Vector2(340, 360)
+layout_mode = 2
+
+[node name="GrindLabel" type="Label" parent="UI/ControlPanel/ControlContent"]
+layout_mode = 2
+text = "研磨: Lv1"
+
+[node name="GrindSlider" type="HSlider" parent="UI/ControlPanel/ControlContent"]
+custom_minimum_size = Vector2(340, 20)
+layout_mode = 2
 min_value = 1.0
 max_value = 5.0
 value = 1.0
 
-[node name="TempLabel" type="Label" parent="UI"]
-layout_mode = 0
-offset_left = 300.0
-offset_top = 608.0
-offset_right = 420.0
-offset_bottom = 633.0
-text = "温度: 0°C"
+[node name="TempLabel" type="Label" parent="UI/ControlPanel/ControlContent"]
+layout_mode = 2
+text = "温度: 0C"
 
-[node name="TempSlider" type="HSlider" parent="UI"]
-layout_mode = 0
-offset_left = 300.0
-offset_top = 636.0
-offset_right = 640.0
-offset_bottom = 666.0
+[node name="TempSlider" type="HSlider" parent="UI/ControlPanel/ControlContent"]
+custom_minimum_size = Vector2(340, 20)
+layout_mode = 2
 step = 5.0
 
-[node name="SynthesizeBtn" type="Button" parent="UI"]
-layout_mode = 0
-offset_left = 300.0
-offset_top = 690.0
-offset_right = 460.0
-offset_bottom = 730.0
+[node name="SelectedLabel" type="Label" parent="UI/ControlPanel/ControlContent"]
+layout_mode = 2
+text = "工作台上: (空)"
+
+[node name="BtnRow" type="HBoxContainer" parent="UI/ControlPanel/ControlContent"]
+layout_mode = 2
+
+[node name="SynthesizeBtn" type="Button" parent="UI/ControlPanel/ControlContent/BtnRow"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
 text = "尝试合成"
 
-[node name="TestFieldBtn" type="Button" parent="UI"]
-layout_mode = 0
-offset_left = 476.0
-offset_top = 690.0
-offset_right = 640.0
-offset_bottom = 730.0
+[node name="TestFieldBtn" type="Button" parent="UI/ControlPanel/ControlContent/BtnRow"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
 text = "去试验场"
-
-[node name="HubBtn" type="Button" parent="UI"]
-layout_mode = 0
-offset_left = 1840.0
-offset_top = 12.0
-offset_right = 1900.0
-offset_bottom = 48.0
-text = "← 中枢"
-
-[node name="SelectedLabel" type="Label" parent="UI"]
-layout_mode = 0
-offset_left = 300.0
-offset_top = 740.0
-offset_right = 640.0
-offset_bottom = 770.0
-text = "工作台上: (空)"
