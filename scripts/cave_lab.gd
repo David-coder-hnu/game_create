@@ -1,5 +1,7 @@
 extends Node2D
 
+const C = preload("res://resources/colors.gd")
+
 @onready var firefly: Sprite2D = $Firefly
 @onready var workbench: Sprite2D = $Workbench
 @onready var crucible: Sprite2D = $Crucible
@@ -34,13 +36,12 @@ var _pending_recipe: Dictionary = {}
 
 
 func _ready() -> void:
-	RenderingServer.set_default_clear_color(Color(0.04, 0.02, 0.01, 1.0))
 	RecipeDB.recipe_discovered.connect(_on_recipe_discovered)
 	grind_slider.value_changed.connect(_on_grind)
 	temp_slider.value_changed.connect(_on_temp)
 	synthesize_btn.pressed.connect(_on_synthesize)
 	test_field_btn.pressed.connect(_on_test_field)
-	hub_btn.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/ant_nest_hub.tscn"))
+	hub_btn.pressed.connect(func(): SceneTransition.fade_to("res://scenes/ant_nest_hub.tscn"))
 	
 	# Vignette shader
 	var mat = ShaderMaterial.new()
@@ -49,6 +50,8 @@ func _ready() -> void:
 	mat.shader = sh
 	vignette.material = mat
 	
+	SceneTransition.style_all_buttons($UI)
+	SceneTransition.style_all_buttons($UI)
 	call_deferred("_build_all")
 
 
@@ -76,16 +79,16 @@ func _build_graph() -> void:
 		lbl.custom_minimum_size = Vector2(190, 16)
 		if discovered:
 			lbl.text = ("★ " if sid == "black_powder" else "") + rec.get("player_name", sid)
-			lbl.add_theme_color_override("font_color", Color(0.49, 0.76, 0.26) if inter else Color(0.96, 0.82, 0.42))
+			lbl.add_theme_color_override("font_color", C.ACID_GREEN if inter else C.FIREFLY)
 		else:
 			lbl.text = "???"
-			lbl.add_theme_color_override("font_color", Color(0.3, 0.3, 0.3))
+			lbl.add_theme_color_override("font_color", C.NODE_LOCKED_TEXT)
 		row.add_child(lbl)
 		synth_graph.add_child(row)
 		if not rec.get("parent_ids", []).is_empty():
 			var conn = Label.new()
 			conn.text = "     |-"
-			conn.add_theme_color_override("font_color", Color(0.25, 0.25, 0.25))
+			conn.add_theme_color_override("font_color", C.NODE_LINE_COLOR)
 			conn.add_theme_font_size_override("font_size", 9)
 			synth_graph.add_child(conn)
 
@@ -119,7 +122,7 @@ func _build_materials() -> void:
 		var qty = Label.new()
 		qty.text = "inf"
 		qty.custom_minimum_size = Vector2(28, 24)
-		qty.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+		qty.add_theme_color_override("font_color", C.SMOKE_GRAY)
 		row.add_child(qty)
 		box.add_child(row)
 	for iid in InventoryManager.get_available_intermediates():
@@ -135,13 +138,13 @@ func _build_materials() -> void:
 			row.add_child(ic)
 		var lbl = Label.new()
 		lbl.text = "~ " + r["player_name"]
-		lbl.add_theme_color_override("font_color", Color(0.49, 0.76, 0.26))
+		lbl.add_theme_color_override("font_color", C.ACID_GREEN)
 		row.add_child(lbl)
 		box.add_child(row)
 
 
 func _update_btn(btn: Button, mid: String) -> void:
-	btn.self_modulate = Color(1.0, 0.84, 0.42) if mid in selected_materials else Color(1, 1, 1)
+	btn.self_modulate = C.FIREFLY if mid in selected_materials else Color(1, 1, 1)
 
 
 func _toggle_mat(mid: String, btn: Button) -> void:
@@ -223,5 +226,5 @@ func _done() -> void:
 
 
 func _on_recipe_discovered(_id: String, _type: String) -> void: _build_graph(); _build_materials()
-func _on_test_field() -> void: RecipeDB.pending_recipe = last_recipe; get_tree().change_scene_to_file("res://scenes/test_field.tscn")
+func _on_test_field() -> void: RecipeDB.pending_recipe = last_recipe; SceneTransition.fade_to("res://scenes/test_field.tscn")
 func _show(txt: String) -> void: hint_label.text = txt

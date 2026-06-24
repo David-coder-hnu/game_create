@@ -7,13 +7,14 @@ extends Node2D
 @onready var equipment_store_button: Button = $UI/EquipmentStoreBtn
 
 func _ready() -> void:
+	SceneTransition.style_all_buttons($UI)
 	cave_lab_button.pressed.connect(_on_cave_lab)
 	test_field_button.pressed.connect(_on_test_field)
 	chapter_select_button.pressed.connect(_on_chapter_select)
 	equipment_store_button.pressed.connect(_on_equipment_store)
 
 func _on_cave_lab() -> void:
-	get_tree().change_scene_to_file("res://scenes/cave_lab.tscn")
+	SceneTransition.fade_to("res://scenes/cave_lab.tscn")
 
 func _on_test_field() -> void:
 	get_tree().change_scene_to_file("res://scenes/test_field.tscn")

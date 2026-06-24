@@ -4,11 +4,18 @@
 [ext_resource type="Texture2D" path="res://assets/explosive_placed.png" id="explo_tex"]
 [ext_resource type="Texture2D" path="res://assets/ui_naming_bg.png" id="naming_bg"]
 
+[ext_resource type="Texture2D" path="res://assets/cave_bg.png" id="cave_bg"]
+
 [node name="TestField" type="Node2D"]
 script = ExtResource("1_tf")
 
+[node name="CaveBG" type="Sprite2D" parent="."]
+position = Vector2(960, 540)
+texture = ExtResource("cave_bg")
+centered = true
+
 [node name="Background" type="ColorRect" parent="."]
-color = Color(0.05, 0.02, 0.01, 1.0)
+color = Color(0, 0, 0, 0)
 layout_mode = 0
 offset_right = 1920
 offset_bottom = 1080

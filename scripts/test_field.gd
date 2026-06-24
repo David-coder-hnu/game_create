@@ -1,6 +1,8 @@
 # TestField.gd — 试验场: RigidBody2D 建筑破坏 + 粒子 + 慢动作 + 命名
 extends Node2D
 
+const C = preload("res://resources/colors.gd")
+
 @onready var building_root: Node2D = $Building
 @onready var particles: GPUParticles2D = $Particles
 @onready var score_label: Label = $UI/ScoreLabel
@@ -20,13 +22,13 @@ var last_recipe: Dictionary = {}
 
 
 func _ready() -> void:
-	RenderingServer.set_default_clear_color(Color(0.05, 0.02, 0.01, 1.0))
 	_connect_ui()
 	explosive_sprite.visible = false
 	# Load pending recipe from lab
 	if not RecipeDB.pending_recipe.is_empty():
 		last_recipe = RecipeDB.pending_recipe
 		RecipeDB.pending_recipe = {}
+	SceneTransition.style_all_buttons($UI)
 	call_deferred("_late_init")
 
 
@@ -261,4 +263,4 @@ func _on_replay() -> void:
 	hint.text = "慢动作回放: 0.25x"
 
 func _on_back() -> void:
-	get_tree().change_scene_to_file("res://scenes/cave_lab.tscn")
+	SceneTransition.fade_to("res://scenes/cave_lab.tscn")
