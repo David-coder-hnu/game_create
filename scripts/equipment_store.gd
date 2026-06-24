@@ -35,7 +35,7 @@ func _build_device_list():
 		if not owned:
 			var buy_btn = Button.new()
 			buy_btn.text = "购买"
-			buy_btn.pressed.connect(func(): _on_buy(dev["id"]))
+			buy_btn.pressed.connect(_on_buy.bind(dev["id"]))
 			row.add_child(buy_btn)
 
 		container.add_child(row)

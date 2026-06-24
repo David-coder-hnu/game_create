@@ -76,10 +76,14 @@ func _deduct(d: Dictionary) -> void:
 
 # ── 查询 ──
 func get_owned_operations() -> Array[String]:
+	var seen := {}
 	var ops: Array[String] = []
 	for d in devices:
 		if d["owned"]:
-			ops.append_array(d["ops"])
+			for op in d["ops"]:
+				if not seen.has(op):
+					seen[op] = true
+					ops.append(op)
 	return ops
 
 func owns_operation(op: String) -> bool:

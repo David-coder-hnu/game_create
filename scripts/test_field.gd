@@ -2,33 +2,35 @@
 extends Node2D
 
 @onready var building_root: Node2D = $Building
-@onready var fragment_pool: Node2D = $FragmentPool
 @onready var particles: GPUParticles2D = $Particles
 @onready var score_label: Label = $UI/ScoreLabel
 @onready var reset_btn: Button = $UI/ResetBtn
 @onready var gif_btn: Button = $UI/GifBtn
 @onready var replay_btn: Button = $UI/ReplayBtn
 @onready var back_btn: Button = $UI/BackBtn
+@onready var detonate_btn: Button = $UI/DetonateBtn
 @onready var hint: Label = $UI/Hint
 @onready var naming_dialog: Control = $UI/NamingDialog
 @onready var explosive_sprite: Sprite2D = $ExplosiveSprite
 
-const FRAGMENT_POOL_SIZE: int = 40
-var fragments_available: Array[RigidBody2D] = []
 var initial_block_count: int = 0
 var building_intact: bool = true
 var placed_explosive_pos: Vector2 = Vector2.ZERO
+var last_recipe: Dictionary = {}
 
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color(0.05, 0.02, 0.01, 1.0))
 	_connect_ui()
 	explosive_sprite.visible = false
+	# Load pending recipe from lab
+	if not RecipeDB.pending_recipe.is_empty():
+		last_recipe = RecipeDB.pending_recipe
+		RecipeDB.pending_recipe = {}
 	call_deferred("_late_init")
 
 
 func _late_init() -> void:
-	_init_fragment_pool()
 	_build_target()
 
 
@@ -37,23 +39,20 @@ func _connect_ui() -> void:
 	gif_btn.pressed.connect(_on_export_gif)
 	replay_btn.pressed.connect(_on_replay)
 	back_btn.pressed.connect(_on_back)
+	detonate_btn.pressed.connect(_on_detonate)
+	detonate_btn.disabled = true
 	naming_dialog.visible = false
 
 
-# ── 碎片对象池 ──
-func _init_fragment_pool() -> void:
-	for i in FRAGMENT_POOL_SIZE:
-		var frag = RigidBody2D.new()
-		var col = CollisionShape2D.new()
-		var rect = RectangleShape2D.new()
-		rect.size = Vector2(32, 16)
-		col.shape = rect
-		frag.add_child(col)
-		frag.visible = false
-		frag.freeze = true
-		frag.sleeping = true
-		fragment_pool.add_child(frag)
-		fragments_available.append(frag)
+
+# ── 点击放置炸药 ──
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if building_intact and explosive_sprite.visible == false:
+			var pos = get_global_mouse_position()
+			# Only place near building area
+			if pos.x > 600 and pos.x < 1100 and pos.y > 300 and pos.y < 600:
+				place_explosive(pos)
 
 
 # ── 目标建筑 ──
@@ -61,8 +60,8 @@ func _build_target() -> void:
 	for child in building_root.get_children():
 		child.queue_free()
 
-	var tex_soil = load("res://assets/external/tile_cave_bg_rock.png")
-	var tex_stone = load("res://assets/external/tile_cave_bg_crystal.png")
+	var tex_soil = load("res://assets/brick_soil_64x32.png")
+	var tex_stone = load("res://assets/brick_stone_64x32.png")
 	var start_x = 700.0
 	var start_y = 500.0
 	var block_ids: Array[RigidBody2D] = []
@@ -108,7 +107,8 @@ func place_explosive(pos: Vector2) -> void:
 	placed_explosive_pos = pos
 	explosive_sprite.position = pos
 	explosive_sprite.visible = true
-	hint.text = "炸药就位。点击引爆按钮。"
+	detonate_btn.disabled = false
+	hint.text = "炸药就位。点击引爆！"
 
 
 # ── 引爆 ──
@@ -123,6 +123,7 @@ func detonate(recipe: Dictionary) -> void:
 
 	building_intact = false
 	explosive_sprite.visible = false
+	detonate_btn.disabled = true
 	var pos = placed_explosive_pos
 
 	_apply_camera_shake(recipe)
@@ -177,7 +178,7 @@ func _apply_fragments(recipe: Dictionary, pos: Vector2) -> void:
 		block.freeze = false
 		block.sleeping = false
 
-	var count = min(FRAGMENT_POOL_SIZE, blocks.size())
+	var count = min(40, blocks.size())  # max simultaneous fragments
 	for i in count:
 		var block = blocks[i]
 		var dir = (block.global_position - pos).normalized()
@@ -198,17 +199,18 @@ func _apply_particles(recipe: Dictionary, pos: Vector2) -> void:
 	var pm = particles.process_material
 	if pm is ParticleProcessMaterial:
 		if fire:
-			particles.texture = load("res://assets/external/potion_full_1.png")
+			particles.texture = load("res://assets/particle_fire.png")
 		else:
-			particles.texture = load("res://assets/external/bg_cave.png")
+			particles.texture = load("res://assets/particle_smoke.png")
 
 	particles.emitting = true
 
 
 func _calculate_destruction() -> void:
 	var remaining: int = 0
+	var threshold = $Camera2D.global_position.y + 540
 	for child in building_root.get_children():
-		if child is RigidBody2D and child.global_position.y < 600:
+		if child is RigidBody2D and child.global_position.y < threshold:
 			remaining += 1
 	var destroyed = initial_block_count - max(0, remaining)
 	var pct = int(float(destroyed) / initial_block_count * 100)
@@ -240,12 +242,11 @@ func _show_naming(recipe: Dictionary) -> void:
 
 
 # ── UI ──
+func _on_detonate() -> void:
+	detonate(last_recipe)
+
 func _on_reset() -> void:
 	_build_target()
-	for frag in fragments_available:
-		frag.visible = false
-		frag.freeze = true
-		frag.sleeping = true
 	particles.emitting = false
 	particles.amount = 0
 	explosive_sprite.visible = false

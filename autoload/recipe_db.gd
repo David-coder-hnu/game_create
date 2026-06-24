@@ -6,6 +6,7 @@ extends Node
 # ── 数据 ──
 var recipes: Array[Dictionary] = []
 var discovered_ids: Array[String] = []
+var pending_recipe: Dictionary = {}  # data bridge to test_field
 
 # ── 信号 ──
 signal recipe_discovered(recipe_id: String, recipe_type: String)
@@ -251,21 +252,38 @@ func _load_prototype_recipes() -> void:
 
 
 # ── 配方匹配 (容差 ±5% 量化到 5% 桶) ──
-func match(ingredients: Dictionary, grind_level: int, temperature: int) -> Dictionary:
-	"""返回匹配到的 recipe dict, 或空 dict"""
+func match(ingredients: Dictionary, grind_level: int, temperature: int, owned_operations: Array[String] = []) -> Dictionary:
+	"""返回匹配到的 recipe dict, 或空 dict。
+	grind_level 和 temperature 使用配方中定义的 tolerance 进行范围匹配。"""
 	var key_parts: Array[String] = []
 	for mat_id in ingredients:
 		var val = ingredients[mat_id]
 		key_parts.append("%s:%d" % [mat_id, int(round(val / 5.0) * 5)])
 	key_parts.sort()
-	var grind_bucket = int(clamp(round(grind_level / 1.0), 1, 5))
-	var temp_bucket = int(round(temperature / 5.0) * 5)
-	var search_key = "|".join(key_parts) + "|g%d|t%d" % [grind_bucket, temp_bucket]
+	var ingredient_key = "|".join(key_parts)
 
 	for recipe in recipes:
-		if recipe["match_key"] == search_key:
-			# 额外检查: 所有 required_operations 是否被拥有
-			return recipe
+		# 先比原料 (快速排除)
+		if recipe["match_key"] == "":
+			continue
+		var rec_parts = recipe["match_key"].split("|g")[0]
+		if rec_parts != ingredient_key:
+			continue
+		# 容差匹配: 研磨度 ± tolerance
+		var rec_grind: int = recipe.get("grind_level", 1)
+		var grind_tol: int = recipe.get("grind_tolerance", 0)
+		if grind_level < rec_grind - grind_tol or grind_level > rec_grind + grind_tol:
+			continue
+		# 容差匹配: 温度 ± tolerance
+		var rec_temp: int = recipe.get("temperature", 0)
+		var temp_tol: int = recipe.get("temp_tolerance", 0)
+		if temperature < rec_temp - temp_tol or temperature > rec_temp + temp_tol:
+			continue
+		# 额外检查: 所有 required_operations 是否被拥有
+		for op in recipe.get("required_operations", []):
+			if op not in owned_operations:
+				return {}
+		return recipe
 	return {}
 
 
