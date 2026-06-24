@@ -92,6 +92,20 @@ offset_left = 1780; offset_top = 16
 offset_right = 1900; offset_bottom = 52
 text = "←"
 
+[node name="Backpack" type="PanelContainer" parent="UI"]
+layout_mode = 0
+offset_left = 16
+offset_top = 900
+offset_right = 240
+offset_bottom = 1060
+visible = false
+
+[node name="BackpackTitle" type="Label" parent="UI/Backpack"]
+layout_mode = 2
+text = "炸药背囊"
+
+[node name="List" type="VBoxContainer" parent="UI/Backpack"]
+
 [node name="Hint" type="Label" parent="UI"]
 layout_mode = 0
 offset_left = 16; offset_top = 60

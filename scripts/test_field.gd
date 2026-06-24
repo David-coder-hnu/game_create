@@ -14,6 +14,8 @@ const C = preload("res://resources/colors.gd")
 @onready var hint: Label = $UI/Hint
 @onready var naming_dialog: Control = $UI/NamingDialog
 @onready var explosive_sprite: Sprite2D = $ExplosiveSprite
+@onready var backpack: Control = $UI/Backpack
+@onready var backpack_list: VBoxContainer = $UI/Backpack/List
 
 var initial_block_count: int = 0
 var building_intact: bool = true
@@ -34,6 +36,7 @@ func _ready() -> void:
 
 func _late_init() -> void:
 	_build_target()
+	_build_backpack()
 
 
 func _connect_ui() -> void:
@@ -45,6 +48,26 @@ func _connect_ui() -> void:
 	detonate_btn.disabled = true
 	naming_dialog.visible = false
 
+
+
+# ── 炸药背囊 ──
+func _build_backpack() -> void:
+	for c in backpack_list.get_children(): c.queue_free()
+	for rid in RecipeDB.discovered_ids:
+		var r = RecipeDB.get_recipe_by_id(rid)
+		if r.is_empty() or r["recipe_type"] != "explosive": continue
+		var nm = r.get("player_name", rid)
+		var btn = Button.new()
+		btn.text = nm
+		btn.custom_minimum_size = Vector2(120, 26)
+		btn.pressed.connect(_select_explosive.bind(r))
+		backpack_list.add_child(btn)
+	backpack.visible = backpack_list.get_child_count() > 0
+
+
+func _select_explosive(recipe: Dictionary) -> void:
+	last_recipe = recipe
+	if hint: hint.text = "选中 %s。点击建筑放置炸药。" % recipe.get("player_name", recipe["id"])
 
 
 # ── 点击放置炸药 ──
@@ -222,6 +245,12 @@ func _calculate_destruction() -> void:
 # ── 命名 ──
 func _show_naming(recipe: Dictionary) -> void:
 	naming_dialog.visible = true
+	# Apply pixel-art naming dialog background
+	var bg = StyleBoxTexture.new()
+	bg.texture = load("res://assets/ui_naming_bg.png")
+	bg.content_margin_left = 16; bg.content_margin_right = 16
+	bg.content_margin_top = 12; bg.content_margin_bottom = 12
+	naming_dialog.add_theme_stylebox_override("panel", bg)
 	var input = naming_dialog.get_node("NameInput") as LineEdit
 	var confirm = naming_dialog.get_node("ConfirmBtn") as Button
 	input.text = ""

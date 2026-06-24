@@ -10,6 +10,8 @@ func _ready():
 	back_btn.pressed.connect(func(): SceneTransition.fade_to("res://scenes/ant_nest_hub.tscn"))
 	call_deferred("_build_device_list")
 
+const AssetMap = preload("res://resources/asset_map.gd")
+
 func _build_device_list():
 	var container = VBoxContainer.new()
 	device_list.add_child(container)
@@ -17,6 +19,9 @@ func _build_device_list():
 	for dev in EquipmentStore.devices:
 		var row = HBoxContainer.new()
 		var owned = dev["owned"]
+		var ip = AssetMap.get_equipment_icon(dev["id"])
+		if ResourceLoader.exists(ip):
+			var ic = TextureRect.new(); ic.texture = load(ip); ic.custom_minimum_size = Vector2(32, 32); ic.expand_mode = TextureRect.EXPAND_KEEP_SIZE; ic.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED; row.add_child(ic)
 		var label = Label.new()
 		var cost_str = ""
 		if dev["cost_sand"] > 0:
